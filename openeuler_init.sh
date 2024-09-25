@@ -13,8 +13,15 @@ sed -ri 's/^.*(GSSAPIAuthentication ).*$/\1no/' /etc/ssh/sshd_config && sed -rn 
 sed -i 's/#   StrictHostKeyChecking ask/StrictHostKeyChecking no/g'   /etc/ssh/ssh_config
 setenforce 0
 sed -ri.bak 's/^(SELINUX=).*$/\1disabled/' /etc/selinux/config
-systemctl stop firewalld.service 
-systemctl disable firewalld.service
+
+######firewalld#####################
+netmask=$(ip route |grep -v 'default'|grep -v '169.254.169.254'|awk  '{print $1}')
+for sip in $netmask
+do
+  firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address='$sip' accept'
+
+done
+firewall-cmd  --reload
 
 
 yum clean all
