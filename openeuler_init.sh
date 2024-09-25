@@ -1,7 +1,7 @@
 ﻿#!/bin/bash
 
-ROOT_PASS='123qwe$%^RTY'
-BZTYW_PASS='Bztops@2024'
+ROOT_PASS='admin123'
+BZTYW_PASS='admin456'
 useradd bztyw
 echo 'bztyw  ALL=(ALL)      NOPASSWD:ALL' | sudo EDITOR='tee -a' visudo
 echo "bztyw:$BZTYW_PASS" | chpasswd
