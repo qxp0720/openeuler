@@ -95,16 +95,39 @@ modprobe ip_conntrack
 EOF
 
 chmod +x /etc/rc.d/rc.local
-
 modprobe ip_conntrack 
+
+mem=$(free -m | grep Mem: | awk '{print $2}')
+if [ $mem -gt 7000 ] && [ $mem -lt 8000 ]; then
+     m1=6442450944
+     m2=1572864
+elif [ $mem -gt 15000  ] && [ $mem -lt 16000 ]; then
+     m1=15461882265
+     m2=3774873
+
+elif [ $mem -gt 30000 ] && [ $mem -lt 32000 ]; then
+      m1=34359738367
+      m2=8388608
+
+elif [ $mem -gt 46000 ] && [ $mem -lt 48000 ]; then
+      m1=47244640256
+      m2=11534336
+
+elif [ $mem -gt 63000  ] && [ $mem -lt 64000  ]; then
+     m1=64424509440
+     m2=15728640
+else
+      m1=15461882265
+      m2=3774873
+fi
 
 # /etc/sysctl.conf
 [ ! -e "/etc/sysctl.conf_bk" ] && /bin/mv /etc/sysctl.conf{,_bk}
 cat > /etc/sysctl.conf << EOF
 kernel.panic = 1
 kernel.pid_max = 32768
-kernel.shmmax = 15461882265
-kernel.shmall = 3774873
+kernel.shmmax = $m1
+kernel.shmall = $m2
 kernel.core_pattern = core_%e
 vm.panic_on_oom = 1
 vm.overcommit_memory = 1
